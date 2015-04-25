@@ -56,7 +56,7 @@ function closest (num, arr) {
 
 go();
 
-var scrollEvents = bacon.fromEvent(window, 'mousewheel').flatMap(function(){
+var scrollEvents = bacon.fromEvent(window, 'wheel').merge(bacon.fromEvent(window, 'touchmove')).flatMapLatest(function(){
     return document.body.scrollTop;
 });
 
