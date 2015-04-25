@@ -71,6 +71,7 @@ go();
 
 var scrollEvents = bacon.fromEvent(window, 'wheel')
                         .merge(bacon.fromEvent(window, 'touchmove'))
+                        .merge(bacon.fromEvent(window, 'touchstart'))
                         // .debounce(16)
                         .flatMap(function(){
                             return bacon.once(window, 'scroll')
