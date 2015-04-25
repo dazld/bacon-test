@@ -19,7 +19,7 @@ function makeHeading(){
 }
 
 function makeBlock(){
-    return makeHeading() + makePara();
+    return "<div class='panel'>" + makeHeading() + makePara() + "</div>";
 }
 
 
@@ -69,11 +69,17 @@ go();
 
 
 
-var scrollEvents = bacon.fromEvent(window, 'wheel').merge(bacon.fromEvent(window, 'touchmove')).debounce(16).flatMapLatest(function(){
-    return document.body.scrollTop;
-});
+var scrollEvents = bacon.fromEvent(window, 'wheel')
+                        .merge(bacon.fromEvent(window, 'touchmove'))
+                        // .debounce(16)
+                        .flatMap(function(){
+                            return bacon.once(window, 'scroll')
+                        })
+                        .flatMapLatest(function(){
+                            return document.body.scrollTop;
+                        });
 
-var h1s = $('h1');
+var h1s = $('.panel');
 
 var positions = _.map(h1s, function(e){return {el:e, pos: e.offsetTop};});
 var posInts = _.pluck(positions, 'pos');
@@ -93,8 +99,8 @@ scrollEvents.flatMapLatest(getClosestAt).flatMap(function(closest){
         lastScrollCancel = false;
     }
     return closest.pos;
-}).debounce(333).onValue(function(pos){
-    lastScrollCancel = scroll(pos, 333);
+}).debounce(1000).onValue(function(pos){
+    lastScrollCancel = scroll(pos, 1000);
 });
 
 
