@@ -13,6 +13,7 @@
     "bacon.animationframe": "^0.2.1",
     "baconjs": "^0.7.53",
     "gulp": "^3.8.11",
-    "lodash": "^3.7.0"
+    "lodash": "^3.7.0",
+    "raf": "^2.0.4"
   }
 }

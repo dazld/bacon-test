@@ -2,6 +2,8 @@
 var bacon = require('baconjs');
 // baconjs requestAnimFrame scheduler
 require('bacon.animationframe');
+var scroll = require('./animate-scroll')();
+
 
 var _ = window._ =  require('lodash');
 var log = console.log.bind(console);
@@ -82,9 +84,17 @@ function getClosestAt(pos){
     return positions[idx];
 }
 
-scrollEvents.flatMap(getClosestAt).onValue(function(closest){
-    requestAnimationFrame(setActive.bind(null, closest))
-    // bacon.scheduleAnimationFrame(); // this looks good, but not sure how it works..?
+var lastScrollCancel;
+
+scrollEvents.flatMapLatest(getClosestAt).flatMap(function(closest){
+    requestAnimationFrame(setActive.bind(null, closest));
+    if (lastScrollCancel) {
+        lastScrollCancel();
+        lastScrollCancel = false;
+    };
+    return closest.pos;
+}).debounce(333).onValue(function(pos){
+    scroll(pos, 333)
 });
 
 
