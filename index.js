@@ -1,14 +1,12 @@
 "use strict";
 var bacon = require('baconjs');
-var _ = window._ =  require('lodash');
+// baconjs requestAnimFrame scheduler
+require('bacon.animationframe');
 
+var _ = window._ =  require('lodash');
 var log = console.log.bind(console);
 
-
-
 var $ = document.querySelectorAll.bind(document);
-
-
 
 function makePara(){
     return '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';
@@ -54,29 +52,44 @@ function closest (num, arr) {
     return hi;
 }
 
+function setActive (closest){
+    var active = document.querySelector('.active');
+
+    if(active && active !== closest.el) {
+        active.classList.remove('active');
+        closest.el.classList.add('active');
+    }
+    
+}
+
+
 go();
 
-var scrollEvents = bacon.fromEvent(window, 'wheel').merge(bacon.fromEvent(window, 'touchmove')).flatMapLatest(function(){
+
+
+var scrollEvents = bacon.fromEvent(window, 'wheel').merge(bacon.fromEvent(window, 'touchmove')).debounce(16).flatMapLatest(function(){
     return document.body.scrollTop;
 });
 
 var h1s = $('h1');
 
 var positions = _.map(h1s, function(e){return {el:e, pos: e.offsetTop};});
+var posInts = _.pluck(positions, 'pos');
 
-scrollEvents.flatMap(function(pos){
-    var idx = closest(pos, _.pluck(positions, 'pos'));
+
+function getClosestAt(pos){
+    var idx = closest(pos, posInts);
     return positions[idx];
-}).onValue(function(closest){
-    var active = document.querySelector('.active');
-    if(active) {
-        active.classList.remove('active');
-    }
-    closest.el.classList.add('active');
+}
+
+scrollEvents.flatMap(getClosestAt).onValue(function(closest){
+    requestAnimationFrame(setActive.bind(null, closest))
+    // bacon.scheduleAnimationFrame(); // this looks good, but not sure how it works..?
 });
 
 
 
+getClosestAt(document.body.scrollTop).el.classList.add('active');
 
 
 
