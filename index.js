@@ -91,10 +91,10 @@ scrollEvents.flatMapLatest(getClosestAt).flatMap(function(closest){
     if (lastScrollCancel) {
         lastScrollCancel();
         lastScrollCancel = false;
-    };
+    }
     return closest.pos;
 }).debounce(333).onValue(function(pos){
-    scroll(pos, 333)
+    lastScrollCancel = scroll(pos, 333);
 });
 
 
