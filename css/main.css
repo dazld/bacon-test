@@ -11,7 +11,10 @@
 }
 
 .panel {
-    height: 100vh;
+    height: calc(100vh - 4rem);
+    padding: 3rem;
+    margin: 1rem;
+    border: 1px solid black; 
     box-sizing: border-box;
 }
 
