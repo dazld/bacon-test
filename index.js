@@ -72,7 +72,7 @@ go();
 
 var scrollEvents = bacon.fromEvent(window, 'wheel')
                         .merge(bacon.fromEvent(window, 'touchmove'))
-                        .merge(bacon.fromEvent(window, 'touchstart'))
+                        .merge(bacon.fromEvent(window, 'touchend'))
                         // .debounce(16)
                         .flatMap(function(){
                             return bacon.once(window, 'scroll')
@@ -102,7 +102,7 @@ scrollEvents.flatMapLatest(getClosestAt).flatMap(function(closest){
         lastScrollCancel = false;
     }
     return closest.pos;
-}).debounce(1000).onValue(function(pos){
+}).debounce(500).onValue(function(pos){
     lastScrollCancel = scroll(pos-12, 1000);
 });
 
