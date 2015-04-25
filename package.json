@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "beefy index.js:build.js --index=index.html --live --open"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "baconjs": "^0.7.53",
-    "gulp": "^3.8.11"
+    "gulp": "^3.8.11",
+    "lodash": "^3.7.0"
   }
 }
