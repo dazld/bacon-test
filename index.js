@@ -1,7 +1,7 @@
 "use strict";
 var bacon = require('baconjs');
 // baconjs requestAnimFrame scheduler
-require('bacon.animationframe');
+//require('bacon.animationframe');
 var scroll = require('./animate-scroll')();
 
 
@@ -19,7 +19,7 @@ function makeHeading(idx){
 }
 
 function makeBlock(idx){
-    console.log(idx)
+    log(idx)
     return "<div class='panel'>" + makeHeading(idx) + makePara() + "</div>";
 }
 
@@ -79,13 +79,15 @@ var scrollEvents = bacon.fromEvent(window, 'wheel')
                         })
                         // .debounce(100)
                         .flatMapLatest(function(){
-                            return document.body.scrollTop;
+                            return window.scrollY; 
                         });
 
 var h1s = $('.panel');
 
 var positions = _.map(h1s, function(e){return {el:e, pos: e.offsetTop};});
 var posInts = _.pluck(positions, 'pos');
+
+console.log(posInts)
 
 
 function getClosestAt(pos){
@@ -108,7 +110,7 @@ scrollEvents.flatMapLatest(getClosestAt).flatMap(function(closest){
 
 
 
-getClosestAt(document.body.scrollTop).el.classList.add('active');
+getClosestAt(window.scrollY).el.classList.add('active');
 
 
 
